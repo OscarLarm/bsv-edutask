@@ -2,14 +2,17 @@
 from src.controllers.usercontroller import UserController
 from unittest.mock import MagicMock
 
-def test_get_user_by_email_True():
+# next step is to create fixture to always setup mock_dao and the controller
+
+def test_get_user_by_email_Valid():
     # arrange
-    mock_service = MagicMock()
-    mock_service.find.return_value = [{"email": "hej@mail.com"}]
-    user_controller = UserController(mock_service)
+    test_email = "hej@mail.com"
+    mock_dao = MagicMock()
+    mock_dao.find.return_value = [{"email": test_email}]
+    user_controller = UserController(mock_dao)
     # act
-    result = user_controller.get_user_by_email("hej@mail.com")
+    result = user_controller.get_user_by_email(test_email)
     print(result)
 
     # assert
-    assert result == {"email": "hej@mail.com"}
+    assert result == {"email": test_email}
