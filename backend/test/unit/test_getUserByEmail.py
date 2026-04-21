@@ -18,7 +18,7 @@ def test_get_user_by_email_exists(setup_mock):
     mock_dao.find.return_value = [{'email': VALID_EMAIL}]
     
     result = mock_user_controller.get_user_by_email(VALID_EMAIL)
-    print(result)
+    # print(result)
     assert result == {'email': VALID_EMAIL}
 
 # Multiple matching emails
@@ -35,17 +35,17 @@ def test_get_user_by_email_exists_multiple(setup_mock, capsys):
     # Check if the warning message is printed.
     error_output = capsys.readouterr()
     assert error_output.out == f"Error: more than one user found with mail {VALID_EMAIL}\n"
-    print(error_output)
+    # print(error_output)
 
 # # No matching emails
 # # Gives error because get_user_by_email doesn't return None if there is no matches, indexerror. Fault in function.
-# def test_get_user_by_email_none(setup_mock):
-#     mock_user_controller, mock_dao = setup_mock
-#     mock_dao.find.return_value = []
+def test_get_user_by_email_none(setup_mock):
+    mock_user_controller, mock_dao = setup_mock
+    mock_dao.find.return_value = []
     
-#     result = mock_user_controller.get_user_by_email(VALID_EMAIL)
-#     print(result)
-#     assert result is None
+    result = mock_user_controller.get_user_by_email(VALID_EMAIL)
+    # print(result)
+    assert result is None
 
 # Invalid email
 def test_get_user_by_email_invalid(setup_mock):
