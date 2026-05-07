@@ -31,12 +31,6 @@ describe("Interaction with todo-items", () => {
     });
   });
 
-  it("Create a todo-item", () => {
-    cy.get("img").click();
-    cy.get(".inline-form").click().type("test todo").submit();
-    cy.get(".todo-list").should("contain.text", "test todo");
-  });
-
   after(function () {
     // clean up by deleting the user from the database
     cy.request({
@@ -45,5 +39,11 @@ describe("Interaction with todo-items", () => {
     }).then((response) => {
       cy.log(response.body);
     });
+  });
+
+  it("Create a todo-item", () => {
+    cy.get("img").click();
+    cy.get(".inline-form").click().type("test todo").submit();
+    cy.get(".todo-list").should("contain.text", "test todo");
   });
 });
