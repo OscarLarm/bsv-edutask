@@ -6,6 +6,13 @@ describe("Interaction with todo-items", () => {
   beforeEach(function () {
     // enter the main main page
     cy.visit("http://localhost:3000");
+    // login
+    cy.contains("div", "Email Address").find("input[type=text]").type(email);
+    cy.get("form").submit();
+    cy.get("h1").should("contain.text", "Your tasks, " + name);
+    // create one task before each test
+    cy.get(".submit-form").find("#title").type("Test task");
+    cy.get(".submit-form").submit();
   });
 
   before(function () {
@@ -24,18 +31,8 @@ describe("Interaction with todo-items", () => {
     });
   });
 
-  it("login to the system with an existing account", () => {
-    // detect a div which contains "Email Address", find the input and type (in a declarative way)
-    cy.contains("div", "Email Address").find("input[type=text]").type(email);
-    // alternative, imperative way of detecting that input field
-    //cy.get('.inputwrapper #email')
-    //    .type(email)
-
-    // submit the form on this page
-    cy.get("form").submit();
-
-    // assert that the user is now logged in
-    cy.get("h1").should("contain.text", "Your tasks, " + name);
+  it("Create a todo-item", () => {
+    cy.contains("img");
   });
 
   after(function () {
