@@ -20,6 +20,12 @@ describe("Interaction with todo-items", () => {
 
     // submit the form on this page
     cy.get("form").submit();
+
+    // See tasks
+    cy.get('.title-overlay').should('contain.text', title);
+
+    // Open detailed view of task
+    cy.get('.container > :nth-child(1) > a').click();
   });
 
   before(function () {
@@ -54,13 +60,19 @@ describe("Interaction with todo-items", () => {
     });
   });
 
-  
-  it('see tasks', () => {
-    cy.get('.title-overlay').should('contain.text', title);
+  it('create todo item', () => {
+    // Create todo item
+    
+    cy.get(".inline-form").click().type("test todo").submit();
+    cy.get('.todo-list').contains('test todo');
   })
 
-  it('open detailed view', () => {
-    cy.get()
+  it('mark todo item as done', () => {
+    // Mark todo as done.
+    cy.get(':nth-child(2) > .checker').click();
+    
+    // TODO: CHECK SHOULD NOT EXIST
+    // cy.get('.todo-list > :nth-child(2)').should('contain.text', 'Wow another todo item')
   })
   
 
