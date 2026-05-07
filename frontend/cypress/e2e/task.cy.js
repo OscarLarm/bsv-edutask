@@ -19,9 +19,9 @@ describe("Interaction with todo-items", () => {
     cy.get(".submit-form").find("#title").type("Test task");
     cy.get(".submit-form").submit();
     // See tasks
-    cy.get('.title-overlay').should('contain.text', title);
+    cy.get(".title-overlay").should("contain.text", title);
     // Open detailed view of task
-    cy.get('.container > :nth-child(1) > a').click();
+    cy.get(".container > :nth-child(1) > a").click();
   });
 
   before(function () {
@@ -43,7 +43,7 @@ describe("Interaction with todo-items", () => {
             method: "POST",
             url: "http://localhost:5000/tasks/create",
             form: true,
-            body: {...task, userid: uid}
+            body: { ...task, userid: uid },
           }).then((response) => {
             taskId = response.body[0]._id.$oid;
             title = task.title;
@@ -56,20 +56,18 @@ describe("Interaction with todo-items", () => {
     });
   });
 
-
-  
   it("Create a todo-item", () => {
     cy.get(".inline-form").click().type("test todo").submit();
     cy.get(".todo-list").should("contain.text", "test todo");
   });
 
-    it('mark todo item as done', () => {
+  it("mark todo item as done", () => {
     // Mark todo as done.
-    cy.get(':nth-child(2) > .checker').click();
-    
+    cy.get(":nth-child(2) > .checker").click();
+
     // TODO: CHECK SHOULD NOT EXIST
     // cy.get('.todo-list > :nth-child(2)').should('contain.text', 'Wow another todo item')
-  })
+  });
 
   after(function () {
     // clean up by deleting the user from the database
