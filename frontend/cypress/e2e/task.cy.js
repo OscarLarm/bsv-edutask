@@ -32,7 +32,9 @@ describe("Interaction with todo-items", () => {
   });
 
   it("Create a todo-item", () => {
-    cy.contains("img");
+    cy.get("img").click();
+    cy.get(".inline-form").click().type("test todo").submit();
+    cy.get(".todo-list").should("contain.text", "test todo");
   });
 
   after(function () {
