@@ -41,9 +41,23 @@ describe("Interaction with todo-items", () => {
     });
   });
 
-  it("Create a todo-item", () => {
-    cy.get("img").click();
-    cy.get(".inline-form").click().type("test todo").submit();
-    cy.get(".todo-list").should("contain.text", "test todo");
+  // The test todo-items must have unique names with this approach since cypress will get confused otherwise
+  it("Create a todo-item with name and add-btn clicked", () => {
+    cy.get("img").first().click();
+    cy.get(".inline-form").first().click().type("test todo 1").submit();
+    cy.get(".todo-list").should("contain.text", "test todo 1");
+  });
+
+  it("Create a todo-item with name but add-btn not clicked", () => {
+    cy.get("img").first().click();
+    cy.get(".inline-form").first().find("input[type=text]").type("test todo 2", { force: true }); // force added because of cypress getting confused
+    cy.get(".todo-list").should("not.contain.text", "test todo 2");
+  });
+
+  // bit unsure if this is how we should test it, but anyway the test will fail because there is a bug in the system.
+  // You can still create todo-items even if you dont put in a name!
+  it("Checking that add button is disabled when todo-item has no name", () => {
+    cy.get("img").first().click();
+    cy.get('.inline-form > [type="submit"]').should("be.disabled");
   });
 });
