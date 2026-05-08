@@ -2,11 +2,11 @@ describe("Interaction with todo-items", () => {
   let uid; // user id
   let name; // name of the user (firstName + ' ' + lastName)
   let email; // email of the user
-  let taskId; // task id
-  let title; // task title
-  let description; // task description
-  let url; // task url
-  let todos; // todos associated with task
+  // let taskId; // task id
+  // let title; // task title
+  // let description; // task description
+  // let url; // task url
+  // let todos; // todos associated with task
 
   beforeEach(function () {
     // enter the main main page
@@ -19,7 +19,7 @@ describe("Interaction with todo-items", () => {
     cy.get(".submit-form").find("#title").type("Test task");
     cy.get(".submit-form").submit();
     // See tasks
-    cy.get(".title-overlay").should("contain.text", title);
+    cy.get(".title-overlay").should("contain.text", "Test task");
     // Open detailed view of task
     cy.get(".container > :nth-child(1) > a").click();
   });
@@ -37,21 +37,21 @@ describe("Interaction with todo-items", () => {
         name = user.firstName + " " + user.lastName;
         email = user.email;
 
-        // Create a task
-        cy.fixture("task.json").then((task) => {
-          cy.request({
-            method: "POST",
-            url: "http://localhost:5000/tasks/create",
-            form: true,
-            body: { ...task, userid: uid },
-          }).then((response) => {
-            taskId = response.body[0]._id.$oid;
-            title = task.title;
-            description = task.description;
-            url = task.url;
-            todos = task.todos;
-          });
-        });
+        // // Create a task
+        // cy.fixture("task.json").then((task) => {
+        //   cy.request({
+        //     method: "POST",
+        //     url: "http://localhost:5000/tasks/create",
+        //     form: true,
+        //     body: { ...task, userid: uid },
+        //   }).then((response) => {
+        //     taskId = response.body[0]._id.$oid;
+        //     title = task.title;
+        //     description = task.description;
+        //     url = task.url;
+        //     todos = task.todos;
+        //   });
+        // });
       });
     });
   });
@@ -61,14 +61,42 @@ describe("Interaction with todo-items", () => {
     cy.get(".todo-list").should("contain.text", "test todo");
   });
 
-  it("mark todo item as done", () => {
-    // Mark todo as done.
-    cy.get(":nth-child(2) > .checker").click();
+  // --- R8UC2 ---
+  // #1
+  it("Check todo item", () => {
+    // assign alias
+    cy.get(".todo-item > .checker").first().as("todoChecker");
+    cy.get('.todo-list > :nth-child(1) > .editable').as("todoText");
 
-    // TODO: CHECK SHOULD NOT EXIST
-    // cy.get('.todo-list > :nth-child(2)').should('contain.text', 'Wow another todo item')
+    // Verify todo item has unchecked class and no strikethrough text decoration
+    cy.get("@todoChecker").should("not.have.class", "checked").and("have.class", "unchecked");
+    cy.get("@todoText").should("not.have.css", "text-decoration-line", "line-through");
+    
+    cy.get("@todoChecker").click();
+    
+    // Verify todo item has checked class and strikethrough text decoration
+    cy.get("@todoChecker").should("not.have.class", "unchecked").and("have.class", "checked");
+    cy.get("@todoText").should("have.css", "text-decoration-line", "line-through");
   });
 
+  // #2
+  // Problem?? Reliant on checking todo item working correctly
+  it("Uncheck todo item", () => {
+    // assign alias
+    cy.get(".todo-item > .checker").first().as("todoChecker");
+    cy.get('.todo-list > :nth-child(1) > .editable').as("todoText");
+
+    // Verify todo item has checked class and strikethrough text decoration
+    cy.get("@todoChecker").should("not.have.class", "unchecked").and("have.class", "checked");
+    cy.get("@todoText").should("have.css", "text-decoration-line", "line-through");
+    
+    cy.get("@todoChecker").click();
+    
+    // Verify todo item has unchecked class and no strikethrough text decoration
+    cy.get("@todoChecker").should("not.have.class", "checked").and("have.class", "unchecked");
+    cy.get("@todoText").should("not.have.css", "text-decoration-line", "line-through");
+  });
+  
   after(function () {
     // clean up by deleting the user from the database
     cy.request({
