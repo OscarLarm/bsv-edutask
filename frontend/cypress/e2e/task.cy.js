@@ -55,9 +55,13 @@ describe("Interaction with todo-items", () => {
   });
 
   // bit unsure if this is how we should test it, but anyway the test will fail because there is a bug in the system.
-  // You can still create todo-items even if you dont put in a name!
+  // bug is: You can still create todo-items even if you dont put in a name!
   it("Checking that add button is disabled when todo-item has no name", () => {
-    cy.get("img").first().click();
-    cy.get('.inline-form > [type="submit"]').should("be.disabled");
+    cy.get("img").first().click(); // open task in detail view mode
+    cy.get('.inline-form > [type="submit"]').click({ force: true });
+    cy.get(".todo-list").should("not.contain.text", "");
+    // cy.get('.inline-form > [type="submit"]').should("be.disabled");
   });
+
+  it("No name and not add button clicked", () => {});
 });
