@@ -80,15 +80,20 @@ describe("Interaction with todo-items", () => {
   // --- R8UC2 ---
   // #1
   it("Check todo item", () => {
+    // create new todo
+    cy.get(".inline-form").find("input[type=text]").type("test todo check", { force: true });
+    cy.get(".inline-form").submit();
+    cy.get(".todo-list").should("contain.text", "test todo check");
+
     // assign alias
-    cy.get(".todo-item > .checker").first().as("todoChecker");
-    cy.get(".todo-list > :nth-child(1) > .editable").as("todoText");
+    cy.contains(".todo-item",  "test todo check").find(".checker").as("todoChecker");
+    cy.contains(".todo-item",  "test todo check").find(".editable").as("todoText");
 
     // Verify todo item has unchecked class and no strikethrough text decoration
     cy.get("@todoChecker").should("not.have.class", "checked").and("have.class", "unchecked");
     cy.get("@todoText").should("not.have.css", "text-decoration-line", "line-through");
 
-    cy.get("@todoChecker").click();
+    cy.get("@todoChecker").click({ force: true });
 
     // Verify todo item has checked class and strikethrough text decoration
     cy.get("@todoChecker").should("not.have.class", "unchecked").and("have.class", "checked");
@@ -96,17 +101,24 @@ describe("Interaction with todo-items", () => {
   });
 
   // #2
-  // Problem?? Reliant on checking todo item working correctly
   it("Uncheck todo item", () => {
+    // create new todo
+    cy.get(".inline-form").find("input[type=text]").type("test todo uncheck", { force: true });
+    cy.get(".inline-form").submit();
+    cy.get(".todo-list").should("contain.text", "test todo uncheck");
+
+    // check the todo item
+    cy.contains(".todo-item", "test todo uncheck").find(".checker").click({ force: true });
+
     // assign alias
-    cy.get(".todo-item > .checker").first().as("todoChecker");
-    cy.get(".todo-list > :nth-child(1) > .editable").as("todoText");
+    cy.contains(".todo-item", "test todo uncheck").find(".checker").as("todoChecker");
+    cy.contains(".todo-item", "test todo uncheck").find(".editable").as("todoText");
 
     // Verify todo item has checked class and strikethrough text decoration
     cy.get("@todoChecker").should("not.have.class", "unchecked").and("have.class", "checked");
     cy.get("@todoText").should("have.css", "text-decoration-line", "line-through");
 
-    cy.get("@todoChecker").click();
+    cy.get("@todoChecker").click({ force: true });
 
     // Verify todo item has unchecked class and no strikethrough text decoration
     cy.get("@todoChecker").should("not.have.class", "checked").and("have.class", "unchecked");
@@ -117,9 +129,15 @@ describe("Interaction with todo-items", () => {
   // #1
   // FAILS. Test pass if you click twice. Fault in code.
   it("Delete todo item", () => {
-    cy.contains(".todo-item", "test todo").find(".remover").click(); // Adding an additional .click() here passes the test.
+    // create new todo
+    cy.get(".inline-form").find("input[type=text]").type("test todo delete", { force: true });
+    cy.get(".inline-form").submit();
+    cy.get(".todo-list").should("contain.text", "test todo delete");
+    
+    
+    cy.contains(".todo-item", "test todo delete").find(".remover").click({ force: true }); // Adding an additional .click() here passes the test.
 
-    cy.contains(".todo-item", "test todo").should("not.exist");
+    cy.contains(".todo-item", "test todo delete").should("not.exist");
   });
 
   after(function () {
