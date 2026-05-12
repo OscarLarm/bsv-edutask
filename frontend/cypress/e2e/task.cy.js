@@ -15,9 +15,6 @@ describe("Interaction with todo-items", () => {
     cy.contains("div", "Email Address").find("input[type=text]").type(email);
     cy.get("form").submit();
     cy.get("h1").should("contain.text", "Your tasks, " + name);
-    // create one task before each test
-    // cy.get(".submit-form").find("#title").type("Test task");
-    // cy.get(".submit-form").submit();
     // See tasks
     cy.get(".title-overlay").should("contain.text", "Learn React");
     // Open detailed view of task
