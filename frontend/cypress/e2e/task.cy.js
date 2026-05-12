@@ -56,9 +56,27 @@ describe("Interaction with todo-items", () => {
     });
   });
 
-  it("Create a todo-item", () => {
+  // --- R8UC1 ---
+  // The test todo-items must have unique names with this approach since cypress will get confused otherwise
+  it("Create a todo-item with name and add-btn clicked", () => {
+    // cy.get("img").first().click();
     cy.get(".inline-form").click().type("test todo").submit();
     cy.get(".todo-list").should("contain.text", "test todo");
+  });
+
+  it("Create a todo-item with name but add-btn not clicked", () => {
+    // cy.get("img").first().click();
+    cy.get(".inline-form").first().find("input[type=text]").type("test todo 2", { force: true }); // force added because of cypress getting confused
+    cy.get(".todo-list").should("not.contain.text", "test todo 2");
+  });
+
+  // bit unsure if this is how we should test it, but anyway the test will fail because there is a bug in the system.
+  // bug is: You can still create todo-items even if you dont put in a name!
+  it("Checking that add button is disabled when todo-item has no name", () => {
+    // cy.get("img").first().click(); // open task in detail view mode
+    cy.get('.inline-form > [type="submit"]').click({ force: true });
+    cy.get(".todo-list").should("not.contain.text", "");
+    // cy.get('.inline-form > [type="submit"]').should("be.disabled");
   });
 
   // --- R8UC2 ---
@@ -69,26 +87,14 @@ describe("Interaction with todo-items", () => {
     cy.get(".todo-list > :nth-child(1) > .editable").as("todoText");
 
     // Verify todo item has unchecked class and no strikethrough text decoration
-    cy.get("@todoChecker")
-      .should("not.have.class", "checked")
-      .and("have.class", "unchecked");
-    cy.get("@todoText").should(
-      "not.have.css",
-      "text-decoration-line",
-      "line-through",
-    );
+    cy.get("@todoChecker").should("not.have.class", "checked").and("have.class", "unchecked");
+    cy.get("@todoText").should("not.have.css", "text-decoration-line", "line-through");
 
     cy.get("@todoChecker").click();
 
     // Verify todo item has checked class and strikethrough text decoration
-    cy.get("@todoChecker")
-      .should("not.have.class", "unchecked")
-      .and("have.class", "checked");
-    cy.get("@todoText").should(
-      "have.css",
-      "text-decoration-line",
-      "line-through",
-    );
+    cy.get("@todoChecker").should("not.have.class", "unchecked").and("have.class", "checked");
+    cy.get("@todoText").should("have.css", "text-decoration-line", "line-through");
   });
 
   // #2
@@ -99,36 +105,23 @@ describe("Interaction with todo-items", () => {
     cy.get(".todo-list > :nth-child(1) > .editable").as("todoText");
 
     // Verify todo item has checked class and strikethrough text decoration
-    cy.get("@todoChecker")
-      .should("not.have.class", "unchecked")
-      .and("have.class", "checked");
-    cy.get("@todoText").should(
-      "have.css",
-      "text-decoration-line",
-      "line-through",
-    );
+    cy.get("@todoChecker").should("not.have.class", "unchecked").and("have.class", "checked");
+    cy.get("@todoText").should("have.css", "text-decoration-line", "line-through");
 
     cy.get("@todoChecker").click();
 
     // Verify todo item has unchecked class and no strikethrough text decoration
-    cy.get("@todoChecker")
-      .should("not.have.class", "checked")
-      .and("have.class", "unchecked");
-    cy.get("@todoText").should(
-      "not.have.css",
-      "text-decoration-line",
-      "line-through",
-    );
+    cy.get("@todoChecker").should("not.have.class", "checked").and("have.class", "unchecked");
+    cy.get("@todoText").should("not.have.css", "text-decoration-line", "line-through");
   });
 
   // --- R8UC3 ---
   // #1
   // FAILS. Test pass if you click twice. Fault in code.
   it("Delete todo item", () => {
-    cy.contains('.todo-item', 'test todo')
-      .find('.remover').click(); // Adding an additional .click() here passes the test.
+    cy.contains(".todo-item", "test todo").find(".remover").click(); // Adding an additional .click() here passes the test.
 
-    cy.contains('.todo-item', 'test todo').should('not.exist');
+    cy.contains(".todo-item", "test todo").should("not.exist");
   });
 
   after(function () {
