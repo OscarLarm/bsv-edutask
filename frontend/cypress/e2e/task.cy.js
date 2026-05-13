@@ -34,7 +34,7 @@ describe("Interaction with todo-items", () => {
         name = user.firstName + " " + user.lastName;
         email = user.email;
 
-        // // Create a task
+        // Create a task
         cy.fixture("task.json").then((task) => {
           cy.request({
             method: "POST",
@@ -56,14 +56,12 @@ describe("Interaction with todo-items", () => {
   // --- R8UC1 ---
   // The test todo-items must have unique names with this approach since cypress will get confused otherwise
   it("Create a todo-item with name and add-btn clicked", () => {
-    // cy.get("img").first().click();
     cy.get(".inline-form").find("input[type=text]").type("test todo 1", { force: true });
     cy.get(".inline-form").submit();
     cy.get(".todo-list").should("contain.text", "test todo 1");
   });
 
   it("Create a todo-item with name but add-btn not clicked", () => {
-    // cy.get("img").first().click();
     cy.get(".inline-form").first().find("input[type=text]").type("test todo 2", { force: true }); // force added because of cypress getting confused
     cy.get(".todo-list").should("not.contain.text", "test todo 2");
   });
@@ -71,10 +69,8 @@ describe("Interaction with todo-items", () => {
   // bit unsure if this is how we should test it, but anyway the test will fail because there is a bug in the system.
   // bug is: You can still create todo-items even if you dont put in a name!
   it("Checking that add button is disabled when todo-item has no name", () => {
-    // cy.get("img").first().click(); // open task in detail view mode
     cy.get('.inline-form > [type="submit"]').click({ force: true });
     cy.get(".todo-list").should("not.contain.text", "");
-    // cy.get('.inline-form > [type="submit"]').should("be.disabled");
   });
 
   // --- R8UC2 ---
@@ -86,8 +82,8 @@ describe("Interaction with todo-items", () => {
     cy.get(".todo-list").should("contain.text", "test todo check");
 
     // assign alias
-    cy.contains(".todo-item",  "test todo check").find(".checker").as("todoChecker");
-    cy.contains(".todo-item",  "test todo check").find(".editable").as("todoText");
+    cy.contains(".todo-item", "test todo check").find(".checker").as("todoChecker");
+    cy.contains(".todo-item", "test todo check").find(".editable").as("todoText");
 
     // Verify todo item has unchecked class and no strikethrough text decoration
     cy.get("@todoChecker").should("not.have.class", "checked").and("have.class", "unchecked");
@@ -133,8 +129,7 @@ describe("Interaction with todo-items", () => {
     cy.get(".inline-form").find("input[type=text]").type("test todo delete", { force: true });
     cy.get(".inline-form").submit();
     cy.get(".todo-list").should("contain.text", "test todo delete");
-    
-    
+
     cy.contains(".todo-item", "test todo delete").find(".remover").click({ force: true }); // Adding an additional .click() here passes the test.
 
     cy.contains(".todo-item", "test todo delete").should("not.exist");
