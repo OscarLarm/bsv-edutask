@@ -2,9 +2,9 @@ name: Pytest
 
 on:
   push:
-    branches: ["master"]
+    branches: ["master", "assignment-6-oscar"]
   pull_request:
-    branches: ["master"]
+    branches: ["master", "assignment-6-oscar"]
   workflow_dispatch:
 
 jobs:
